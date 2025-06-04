@@ -1,18 +1,26 @@
 - hosts: all
   become: True
   tasks:
-    - name: bon repo
+    - name: Enable nginx topic from Amazon Linux Extras
       command: amazon-linux-extras enable nginx1
-    - name: Install packages
+      args:
+        warn: no
+      when: ansible_facts['distribution'] == 'Amazon' and ansible_facts['distribution_major_version'] == '2'
+
+    - name: Install Nginx using yum
       yum:
-        name: "nginx"
-        state: "present"
+        name: nginx
+        state: present
+        update_cache: yes
+
     - name: Start nginx server
       service:
         name: nginx
         state: started
         enabled: True
+
     - name: Deploy static website
       copy:
-        src: index.html # We have define a html page 
-        dest: /var/www/html/
+        src: index.html
+        dest: /usr/share/nginx/html/
+ 
