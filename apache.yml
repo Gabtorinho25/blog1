@@ -1,6 +1,8 @@
 - hosts: all
   become: True
   tasks:
+    - name: bon repo
+      command: amazon-linux-extras enable nginx1
     - name: Install packages
       yum:
         name: "nginx"
